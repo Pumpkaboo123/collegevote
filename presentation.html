@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Secure Digital Student Voting System | Presentation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@200;400;700&display=swap" rel="stylesheet">
+  
+  <!-- Reveal.js CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.1/reset.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.1/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.1/theme/black.min.css">
+
+  <style>
+    :root {
+      --primary: #6366f1;
+      --secondary: #a855f7;
+      --glass: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text: #f8fafc;
+    }
+
+    .reveal {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--text);
+      background: #0f172a;
+      background-image: 
+        radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.15) 0%, transparent 50%);
+    }
+
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: 'Outfit', sans-serif;
+      text-transform: none;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .reveal h1 { font-size: 3.5rem; line-height: 1.1; }
+    .reveal h2 { color: var(--primary); font-size: 2.5rem; margin-bottom: 30px; }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .glass-panel {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .reveal img {
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      border: 1px solid var(--glass-border);
+      max-height: 500px !important;
+    }
+
+    .tag {
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--primary);
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style-type: none !important;
+      margin-left: 0 !important;
+    }
+
+    li::before {
+      content: '✦';
+      color: var(--primary);
+      margin-right: 15px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .stat-value {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--primary);
+      display: block;
+    }
+
+    .reveal .progress { color: var(--primary); }
+    .reveal .controls { color: var(--primary); }
+
+    pre {
+      background: rgba(0,0,0,0.4) !important;
+      border-radius: 12px !important;
+      border: 1px solid var(--glass-border) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Title Slide -->
+      <section data-background-color="#0f172a">
+        <div class="glass-panel" style="display: flex; flex-direction: column; align-items: center;">
+          <div class="tag">Minor Project 2025-26</div>
+          <h1>Secure Digital <br/><span class="gradient-text">Student Voting</span> System</h1>
+          <p style="margin-top: 40px; opacity: 0.8; font-weight: 300;">Elevating Student Elections through Modern Technology</p>
+          <div style="margin-top: 60px; display: flex; gap: 40px; border-top: 1px solid var(--glass-border); padding-top: 30px; width: 100%; justify-content: center;">
+            <div style="text-align: left;">
+              <small style="display: block; color: var(--primary);">Presented by</small>
+              <strong>Aslam</strong><br/>
+              <small>2301112345</small>
+            </div>
+            <div style="text-align: left;">
+              <small style="display: block; color: var(--primary);">Guided by</small>
+              <strong>Ms. Remitha N V</strong><br/>
+              <small>Lecturer, CE Dept</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- The Problem -->
+      <section>
+        <h2>The Challenge</h2>
+        <div class="feature-grid">
+          <div class="glass-panel fragment" data-fragment-index="1">
+            <h4 style="color: var(--secondary)">Traditional Voting</h4>
+            <ul>
+              <li>Long physical queues</li>
+              <li>Manual counting errors</li>
+              <li>Paper waste & high cost</li>
+              <li>Prone to duplication</li>
+            </ul>
+          </div>
+          <div class="glass-panel fragment" data-fragment-index="2">
+            <h4 style="color: var(--primary)">Our Solution</h4>
+            <ul>
+              <li>Instant results tracking</li>
+              <li>Zero physical infrastructure</li>
+              <li>Tamper-proof integrity</li>
+              <li>Accessible from anywhere</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Objectives -->
+      <section>
+        <h2>Project Objectives</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="glass-panel">
+            <h3 style="font-size: 1.2rem;">01. Security</h3>
+            <p style="font-size: 0.9rem;">Atomic operations to ensure "One Student, One Vote" with zero race conditions.</p>
+          </div>
+          <div class="glass-panel">
+            <h3 style="font-size: 1.2rem;">02. UX Excellence</h3>
+            <p style="font-size: 0.9rem;">Modern, high-end UI using glassmorphism and fluid micro-animations.</p>
+          </div>
+          <div class="glass-panel">
+            <h3 style="font-size: 1.2rem;">03. Transparency</h3>
+            <p style="font-size: 0.9rem;">Real-time participation metrics for administrators without compromising anonymity.</p>
+          </div>
+          <div class="glass-panel">
+            <h3 style="font-size: 1.2rem;">04. Scalability</h3>
+            <p style="font-size: 0.9rem;">Lightweight architecture capable of handling thousands of concurrent voters.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tech Stack -->
+      <section>
+        <h2>The Powerhouse Stack</h2>
+        <div style="display: flex; gap: 20px; justify-content: center; align-items: stretch; margin-top: 40px;">
+          <div class="glass-panel" style="flex: 1;">
+            <div style="font-size: 2rem; margin-bottom: 20px;">⚛️</div>
+            <h4>React.js</h4>
+            <small>High-performance UI with Vite & Framer Motion</small>
+          </div>
+          <div class="glass-panel" style="flex: 1;">
+            <div style="font-size: 2rem; margin-bottom: 20px;">🟢</div>
+            <h4>Node.js</h4>
+            <small>Scalable REST API with Express framework</small>
+          </div>
+          <div class="glass-panel" style="flex: 1;">
+            <div style="font-size: 2rem; margin-bottom: 20px;">🍃</div>
+            <h4>MongoDB</h4>
+            <small>NoSQL storage with Mongoose ODM modeling</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- UI: Login & Register -->
+      <section>
+        <section>
+          <h2>First Impressions</h2>
+          <p>Secure login with college-specific email authentication (@college.edu)</p>
+          <img src="presentation_assets/1_login_page_1774429903651.png" alt="Login Page">
+        </section>
+        <section>
+          <h2>Simple Registration</h2>
+          <p>Quick onboarding for new student voters</p>
+          <img src="presentation_assets/2_register_page_1774429939496.png" alt="Register Page">
+        </section>
+      </section>
+
+      <!-- UI: Dashboard & Voting -->
+      <section>
+        <section>
+          <h2>Student Dashboard</h2>
+          <p>Crystal clear election information and candidate profiles</p>
+          <img src="presentation_assets/3_student_dashboard_retry_1774430065076.png" alt="Dashboard">
+        </section>
+        <section>
+          <h2>Informed Decisions</h2>
+          <p>Read about candidate bios before casting your vote</p>
+          <img src="presentation_assets/4_candidate_modal_1774430130688.png" alt="Candidate Modal">
+        </section>
+      </section>
+
+      <!-- UI: Confirmation -->
+      <section>
+        <section>
+          <h2>Final Confirmation</h2>
+          <p>Two-step verification to prevent accidental voting</p>
+          <img src="presentation_assets/5_vote_confirmation_1774430196955.png" alt="Confirmation">
+        </section>
+        <section>
+          <h2>Success Message</h2>
+          <p>Immediate feedback with engaging visual celebrations</p>
+          <img src="presentation_assets/6_success_view_1774430453337.png" alt="Success">
+        </section>
+      </section>
+
+      <!-- UI: Admin -->
+      <section>
+        <h2>Admin Oversight</h2>
+        <p>Real-time analytics and live results dashboard</p>
+        <img src="presentation_assets/7_admin_dashboard_results_1774430595366.png" alt="Admin Dashboard">
+      </section>
+
+      <!-- Core Mechanics -->
+      <section>
+        <h2>Core Voting Logic</h2>
+        <div class="glass-panel">
+          <p style="text-align: left; font-size: 0.8rem; margin-bottom: 20px; color: var(--primary);">Ensuring Transactional Integrity:</p>
+          <pre><code class="javascript" data-trim data-noescape>
+const updated = await Election.findOneAndUpdate(
+  { 
+    _id: electionId, 
+    votersParticipated: { $ne: studentId } 
+  },
+  { 
+    $push: { votersParticipated: studentId }, 
+    $inc: { "candidates.$[elem].voteCount": 1 } 
+  },
+  { 
+    arrayFilters: [{ "elem._id": candidateId }] 
+  }
+);
+          </code></pre>
+          <p style="font-size: 0.7rem; opacity: 0.7; margin-top: 20px;">This atomic query prevents a student from voting twice even if they trigger multiple simultaneous requests.</p>
+        </div>
+      </section>
+
+      <!-- Future Scope -->
+      <section>
+        <h2>Future Horizons</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 40px;">
+          <div class="glass-panel" style="font-size: 0.8rem;">
+            <h4>⛓️ Blockchain</h4>
+            <p>Moving towards a decentralized immutable ledger for audit proof.</p>
+          </div>
+          <div class="glass-panel" style="font-size: 0.8rem;">
+            <h4>🔏 Biometrics</h4>
+            <p>Integrating fingerprint/face recognition for high-security 2FA.</p>
+          </div>
+          <div class="glass-panel" style="font-size: 0.8rem;">
+            <h4>📊 Big Data</h4>
+            <p>Deep sentiment analysis and department turnout predictions.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Conclusion -->
+      <section data-background-color="#0f172a">
+        <div class="glass-panel">
+          <h1 class="gradient-text">Thank You!</h1>
+          <p style="margin-top: 40px;">Questions?</p>
+          <div style="margin-top: 60px; font-size: 0.8rem; opacity: 0.6;">
+            College Voting System | Minor Project 2026
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.1/reveal.min.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'convex',
+      backgroundTransition: 'zoom',
+      mouseWheel: true,
+      center: true,
+      plugins: []
+    });
+  </script>
+</body>
+</html>

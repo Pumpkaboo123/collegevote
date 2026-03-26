@@ -19,6 +19,7 @@ const adminController = {
       
       const results = election.candidates.map(candidate => ({
         name: candidate.name,
+        position: candidate.position,
         bio: candidate.bio,
         voteCount: candidate.voteCount,
         percentage: totalVotes > 0 ? ((candidate.voteCount / totalVotes) * 100).toFixed(2) : 0
@@ -64,15 +65,15 @@ const adminController = {
         return res.status(404).json({ success: false, message: "Election not found." });
       }
 
-      // 1. Clear candidate counts
-      election.candidates.forEach(candidate => {
-        candidate.voteCount = 0;
-      });
+      // Atomically reset all candidate vote counts and clear participated voters
+      await Election.updateOne(
+        { _id: electionId },
+        { 
+          $set: { "candidates.$[].voteCount": 0, votersParticipated: [] } 
+        }
+      );
 
-      // 2. Clear voters participated list
-      election.votersParticipated = [];
-
-      await election.save();
+      console.log(`[Admin] Election ${electionId} votes reset successfully.`);
 
       return res.status(200).json({ 
         success: true, 
@@ -81,6 +82,40 @@ const adminController = {
     } catch (error) {
       console.error("Admin reset error:", error);
       return res.status(500).json({ success: false, message: "Internal server error occurred while resetting votes." });
+    }
+  },
+
+  addCandidate: async (req, res) => {
+    const { electionId } = req.params;
+    const { name, position, bio } = req.body;
+
+    if (!name || !position) {
+      return res.status(400).json({ success: false, message: "Candidate name and position are required." });
+    }
+
+    try {
+      const election = await Election.findById(electionId);
+      if (!election) {
+        return res.status(404).json({ success: false, message: "Election not found." });
+      }
+
+      election.candidates.push({
+        name,
+        position,
+        bio: bio || '',
+        voteCount: 0
+      });
+
+      await election.save();
+
+      return res.status(201).json({
+        success: true,
+        message: `Candidate "${name}" added for ${position}.`,
+        election
+      });
+    } catch (error) {
+      console.error("Add candidate error:", error);
+      return res.status(500).json({ success: false, message: "Failed to add candidate." });
     }
   }
 };

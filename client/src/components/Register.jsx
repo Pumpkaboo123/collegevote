@@ -16,6 +16,12 @@ export default function Register({ onRegister, onNavigateToLogin }) {
       setError('Please fill out all fields.');
       return;
     }
+    // Specific College Registration No Validation
+    const regNoRegex = /^XYZ-\d{4}$/i;
+    if (!regNoRegex.test(studentId)) {
+      setError('Invalid Registration No. Only XYZ College students are authorized (format: XYZ-1234).');
+      return;
+    }
     if (!email.endsWith('@college.edu')) {
       setError('You must register with a valid @college.edu email address.');
       return;
@@ -69,7 +75,7 @@ export default function Register({ onRegister, onNavigateToLogin }) {
             </div>
             <div>
               <h4 style={{ margin: 0, fontSize: '1.1rem' }}>One Student, One Vote</h4>
-              <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.9rem' }}>Verified via Student ID</p>
+              <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.9rem' }}>Verified via Registration No</p>
             </div>
           </div>
         </div>
@@ -128,7 +134,7 @@ export default function Register({ onRegister, onNavigateToLogin }) {
               <Hash size={20} color="var(--text-muted)" style={{ position: 'absolute', top: '16px', left: '16px' }} />
               <input 
                 type="text" 
-                placeholder="Student ID"
+                placeholder="Registration No (e.g. XYZ-1234)"
                 value={studentId}
                 onChange={(e) => setStudentId(e.target.value)}
                 style={inputStyle}

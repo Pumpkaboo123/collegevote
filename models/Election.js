@@ -19,6 +19,10 @@ const electionSchema = new mongoose.Schema({
       type: String,
       required: true
     },
+    position: {
+      type: String,
+      required: true
+    },
     bio: String,
     photoUrl: String,
     voteCount: {

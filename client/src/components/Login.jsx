@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LogIn, Shield, Users, Mail, Lock, AlertCircle } from 'lucide-react';
+import { LogIn, Shield, Users, Mail, Lock, AlertCircle, Hash } from 'lucide-react';
 
 export default function Login({ onLogin, onNavigateToRegister }) {
+  const [regNo, setRegNo] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!email || !password) {
-      setError('Please enter both your student email and password.');
+    if (!regNo || !email || !password) {
+      setError('Please provide your Registration No, email, and password.');
+      return;
+    }
+    // Specific College Registration No Validation
+    const regNoRegex = /^XYZ-\d{4}$/i;
+    // Admin bypass for demo purposes
+    if (email !== 'admin@college.edu' && !regNoRegex.test(regNo)) {
+      setError('Invalid Registration No. Only XYZ College students are authorized (format: XYZ-1234).');
       return;
     }
     if (!email.endsWith('@college.edu')) {
@@ -112,6 +120,30 @@ export default function Login({ onLogin, onNavigateToRegister }) {
               </motion.div>
             )}
           </AnimatePresence>
+
+          <div style={{ position: 'relative' }}>
+            <Hash size={20} color="var(--text-muted)" style={{ position: 'absolute', top: '16px', left: '16px' }} />
+            <input 
+              type="text" 
+              placeholder="Registration No (e.g. XYZ-1234)"
+              value={regNo}
+              onChange={(e) => setRegNo(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '16px 16px 16px 48px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid var(--card-border)',
+                borderRadius: '14px',
+                color: 'var(--text-main)',
+                fontSize: '1rem',
+                outline: 'none',
+                transition: 'border-color 0.2s',
+                marginBottom: '20px'
+              }}
+              onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
+              onBlur={(e) => e.target.style.borderColor = 'var(--card-border)'}
+            />
+          </div>
 
           <div style={{ position: 'relative' }}>
             <Mail size={20} color="var(--text-muted)" style={{ position: 'absolute', top: '16px', left: '16px' }} />

@@ -8,8 +8,14 @@ const CryptoJS = require('crypto-js');
 const votingController = {
   submitVote: async (req, res) => {
     const { electionId } = req.params;
-    const { candidateId } = req.body;
+    const { candidateId, candidateIds } = req.body;
     const studentId = req.user.id; // Populated from Auth Middleware
+
+    const idsToVote = candidateIds || (candidateId ? [candidateId] : []);
+
+    if (idsToVote.length === 0) {
+      return res.status(400).json({ success: false, message: "No candidate selections provided." });
+    }
 
     try {
       // 1. Fetch the election and check if it's currently active
@@ -28,6 +34,15 @@ const votingController = {
         return res.status(400).json({ success: false, message: "Election is outside of its scheduled voting period." });
       }
 
+      // Build dynamic atomic update object supporting multiple candidates
+      const incFields = {};
+      const arrayFilters = [];
+      
+      idsToVote.forEach((id, idx) => {
+        incFields[`candidates.$[elem${idx}].voteCount`] = 1;
+        arrayFilters.push({ [`elem${idx}._id`]: id });
+      });
+
       // 3. Atomically update the vote and register the student's participation
       // The condition `votersParticipated: { $ne: studentId }` prevents multiple votes
       const updatedElection = await Election.findOneAndUpdate(
@@ -38,10 +53,10 @@ const votingController = {
         },
         {
           $push: { votersParticipated: studentId },
-          $inc: { "candidates.$[elem].voteCount": 1 }
+          $inc: incFields
         },
         {
-          arrayFilters: [{ "elem._id": candidateId }],
+          arrayFilters: arrayFilters,
           new: true,
           runValidators: true
         }
@@ -59,7 +74,7 @@ const votingController = {
       // 4. (Optional) Log the vote for audit purposes (Anonymized)
       const auditLog = {
         electionId,
-        candidateId,
+        candidateIds: idsToVote,
         ipHash: CryptoJS.SHA256(req.ip).toString(),
         timestamp: new Date()
       };

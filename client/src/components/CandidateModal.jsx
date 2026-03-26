@@ -16,6 +16,12 @@ export default function CandidateModal({ candidate, onClose, onConfirm }) {
         <button className="close-btn" onClick={onClose}><X size={24} /></button>
         
         <h2 style={{ fontSize: '2rem', marginBottom: '8px' }}>{candidate.name}</h2>
+        {candidate.position && (
+          <div style={{ display: 'inline-block', padding: '4px 14px', borderRadius: '100px', background: 'rgba(99,102,241,0.15)', color: 'var(--primary)', fontSize: '0.85rem', fontWeight: '600', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            {candidate.position} Candidate
+          </div>
+        )}
+        <br />
         <span className="gradient-text-primary" style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>Candidate Profile</span>
 
         <div className="mt-8 mb-8">

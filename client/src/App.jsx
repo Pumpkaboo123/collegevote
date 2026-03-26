@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ShieldCheck, AlertCircle } from 'lucide-react';
+import { ShieldCheck, AlertCircle, LogOut } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import Login from './components/Login';
@@ -22,7 +22,14 @@ function App() {
   
   // Modals state
   const [selectedCandidate, setSelectedCandidate] = useState(null);
-  const [candidateToVote, setCandidateToVote] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  // Ballot: one candidate per position
+  const [ballot, setBallot] = useState({
+    'Chairman': null,
+    'Vice Chairman': null,
+    'Secretary': null
+  });
 
   useEffect(() => {
     fetchElection();
@@ -44,24 +51,40 @@ function App() {
     setView('dashboard');
   };
 
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setView('login');
+    setError('');
+    setBallot({ 'Chairman': null, 'Vice Chairman': null, 'Secretary': null });
+  };
+
   const handleSelectCandidate = (candidate) => {
     setSelectedCandidate(candidate);
   };
 
+  // Called from CandidateModal "Select This Candidate" button
   const handleConfirmPrompt = (candidate) => {
     setSelectedCandidate(null);
-    setCandidateToVote(candidate);
+    // Add candidate to ballot under its position
+    if (candidate.position) {
+      setBallot(prev => ({ ...prev, [candidate.position]: candidate }));
+    }
   };
 
-  const handleVoteSubmit = async (candidateId) => {
+  // Submit the full ballot (all 3 positions)
+  const handleBallotSubmit = async () => {
     setError('');
     try {
       if (!election) return;
-      await axios.post(`${API_BASE}/elections/${election._id}/vote`, { candidateId });
-      setCandidateToVote(null);
+      const candidateIds = Object.values(ballot)
+        .filter(c => c !== null)
+        .map(c => c._id);
+
+      await axios.post(`${API_BASE}/elections/${election._id}/vote`, { candidateIds });
+      setShowConfirm(false);
       setView('success');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to submit vote.');
+      setError(err.response?.data?.message || 'Failed to submit ballot.');
     }
   };
 
@@ -81,14 +104,21 @@ function App() {
           College <span className="gradient-text-primary">Vote</span>
         </h1>
         {view === 'dashboard' && currentUser && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.05)', padding: '8px 16px', borderRadius: '100px' }}>
-            <div className="status-badge" style={{ margin: 0, padding: '4px 10px', fontSize: '0.75rem' }}>Authenticated</div>
-            <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{currentUser}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.05)', padding: '8px 16px', borderRadius: '100px' }}>
+              <div className="status-badge" style={{ margin: 0, padding: '4px 10px', fontSize: '0.75rem' }}>Authenticated</div>
+              <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{currentUser}</span>
+            </div>
+            {currentUser !== 'admin@college.edu' && (
+              <button onClick={handleLogout} className="btn btn-outline" style={{ padding: '8px 16px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px', borderRadius: '100px' }}>
+                <LogOut size={16} /> Return Home
+              </button>
+            )}
           </div>
         )}
       </header>
 
-      {error && !candidateToVote && (
+      {error && !showConfirm && (
         <motion.div 
           initial={{ opacity: 0, y: -10 }} 
           animate={{ opacity: 1, y: 0 }} 
@@ -103,9 +133,9 @@ function App() {
           {view === 'login' && <Login key="login" onLogin={handleLogin} onNavigateToRegister={() => setView('register')} />}
           {view === 'register' && <Register key="register" onRegister={handleLogin} onNavigateToLogin={() => setView('login')} />}
           {view === 'dashboard' && currentUser === 'admin@college.edu' ? (
-            <AdminDashboard key="admin" election={election} />
+            <AdminDashboard key="admin" election={election} onLogout={handleLogout} />
           ) : (
-            view === 'dashboard' && <Dashboard key="dash" election={election} onSelectCandidate={handleSelectCandidate} />
+            view === 'dashboard' && <Dashboard key="dash" election={election} onSelectCandidate={handleSelectCandidate} ballot={ballot} onSubmitBallot={() => setShowConfirm(true)} />
           )}
           {view === 'success' && <SuccessView key="success" onReturn={() => setView('dashboard')} />}
         </AnimatePresence>
@@ -120,12 +150,12 @@ function App() {
             onConfirm={handleConfirmPrompt}
           />
         )}
-        {candidateToVote && (
+        {showConfirm && (
           <ConfirmVoteModal
             key="confirm-modal"
-            candidate={candidateToVote}
-            onCancel={() => setCandidateToVote(null)}
-            onVote={handleVoteSubmit}
+            ballot={ballot}
+            onCancel={() => setShowConfirm(false)}
+            onVote={handleBallotSubmit}
             error={error}
           />
         )}

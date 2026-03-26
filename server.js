@@ -28,14 +28,21 @@ const adminAuthMiddleware = (req, res, next) => {
 // Mock Election for Disconnected Mode
 const mockElection = {
   _id: "mock-id-123",
-  title: "Student Body President 2026",
-  description: "College-wide election for the post of President.",
+  title: "Main Council Elections 2026",
+  description: "Official election for Student Council positions: Chairman, Vice Chairman, and Secretary. Cast your vote for each category.",
   startDate: new Date(Date.now() - 1000000),
   endDate: new Date(Date.now() + 100000000),
   status: "ACTIVE",
   candidates: [
-    { _id: "cand1", name: "John Doe", bio: "Computer Science Junior" },
-    { _id: "cand2", name: "Jane Smith", bio: "Economics Senior" }
+    { _id: "cand1", name: "Dr. Arvind Subramanian", position: "Chairman", bio: "Current HOD of Computer Science with 15+ years of academic excellence." },
+    { _id: "cand2", name: "Prof. Meera Deshmukh", position: "Chairman", bio: "Lead of Student Welfare Committee. Committed to enhancing extracurricular funding." },
+    { _id: "cand3", name: "Col. (Retd.) Rajesh Khanna", position: "Chairman", bio: "Ex-Army officer focusing on campus discipline, security, and efficiency." },
+    { _id: "cand4", name: "Ananya Iyer", position: "Vice Chairman", bio: "Third-year Engineering student and captain of the debate team." },
+    { _id: "cand5", name: "Vikram Malhotra", position: "Vice Chairman", bio: "President of the Cultural Club. Dedicated to organizing bigger university fests." },
+    { _id: "cand6", name: "Zoya Siddiqui", position: "Vice Chairman", bio: "Environmental activist. Goal: Make the campus 100% sustainable and green." },
+    { _id: "cand7", name: "Siddharth Goel", position: "Secretary", bio: "Data Science enthusiast. Plans to automate the elective selection process." },
+    { _id: "cand8", name: "Tanvi Shah", position: "Secretary", bio: "Sports secretary intern. Focused on improving athletic facilities for all students." },
+    { _id: "cand9", name: "Rohan Joshi", position: "Secretary", bio: "Library volunteer. Mission: Modernizing the library with e-resources and 24/7 zones." }
   ],
   votersParticipated: []
 };
@@ -68,19 +75,29 @@ app.post('/api/seed-election', async (req, res) => {
   }
   try {
     const Election = require('./models/Election');
-    const newElection = await Election.create({
-      title: "Student Body President 2026",
-      description: "College-wide election for the post of President.",
-      startDate: new Date(Date.now() - 1000000), // Started
-      endDate: new Date(Date.now() + 100000000), // Ongoing
-      status: "ACTIVE",
-      candidates: [
-        { name: "John Doe", bio: "Computer Science Junior", voteCount: 5 },
-        { name: "Jane Smith", bio: "Economics Senior", voteCount: 3 }
-      ],
-      votersParticipated: [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()] // Simulated participation
-    });
-    res.json({ success: true, election: newElection });
+    // Find existing active election or create one
+    let election = await Election.findOne({ status: 'ACTIVE' });
+    if (!election) {
+      election = await Election.create({
+        title: "Main Council Elections 2026",
+        description: "Official election for Student Council positions: Chairman, Vice Chairman, and Secretary.",
+        startDate: new Date(Date.now() - 1000000),
+        endDate: new Date(Date.now() + 100000000),
+        status: "ACTIVE",
+        candidates: [
+          { name: "Dr. Arvind Subramanian", position: "Chairman", bio: "Current HOD of Computer Science with 15+ years of academic excellence.", voteCount: 0 },
+          { name: "Prof. Meera Deshmukh", position: "Chairman", bio: "Lead of Student Welfare Committee. Committed to enhancing extracurricular funding.", voteCount: 0 },
+          { name: "Col. (Retd.) Rajesh Khanna", position: "Chairman", bio: "Ex-Army officer focusing on campus discipline, security, and efficiency.", voteCount: 0 },
+          { name: "Ananya Iyer", position: "Vice Chairman", bio: "Third-year Engineering student and captain of the debate team.", voteCount: 0 },
+          { name: "Vikram Malhotra", position: "Vice Chairman", bio: "President of the Cultural Club. Dedicated to organizing bigger university fests.", voteCount: 0 },
+          { name: "Zoya Siddiqui", position: "Vice Chairman", bio: "Environmental activist. Goal: Make the campus 100% sustainable and green.", voteCount: 0 },
+          { name: "Siddharth Goel", position: "Secretary", bio: "Data Science enthusiast. Plans to automate the elective selection process.", voteCount: 0 },
+          { name: "Tanvi Shah", position: "Secretary", bio: "Sports secretary intern. Focused on improving athletic facilities for all students.", voteCount: 0 },
+          { name: "Rohan Joshi", position: "Secretary", bio: "Library volunteer. Mission: Modernizing the library with e-resources and 24/7 zones.", voteCount: 0 }
+        ]
+      });
+    }
+    res.json({ success: true, election });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -90,6 +107,7 @@ app.post('/api/seed-election', async (req, res) => {
 app.get('/api/admin/elections', adminAuthMiddleware, adminController.getAllElections);
 app.get('/api/admin/elections/:electionId/results', adminAuthMiddleware, adminController.getElectionResults);
 app.post('/api/admin/elections/:electionId/reset', adminAuthMiddleware, adminController.resetVotes);
+app.post('/api/admin/elections/:electionId/add-candidate', adminAuthMiddleware, adminController.addCandidate);
 
 // Health Check
 app.get('/health', (req, res) => res.send('College Voting API is running...'));
